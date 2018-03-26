@@ -1,0 +1,40 @@
+import requests
+import re
+from html.parser import HTMLParser
+
+
+class MyHTMLParser(HTMLParser):
+    flag = 0
+    res = []
+    is_get_data = 0
+    def handle_starttag(self, tag, attrs):
+        if tag == 'ot_kindc':
+            flag = 1
+
+    # def handle_endtag(self, tag):
+        # print("Encountered an end tag :", tag)
+
+    def handle_data(self, data):
+        if flag == 1:
+             if data == '\xa0' or data == '\u3000':
+                print("-----")
+             if data != '\xa0':
+                print("Encountered some data  :", data)
+
+# parser.feed('<html><head><title>Test</title></head><body><h1>Parse me!</h1></body></html>')
+
+payload = {'w': 'starex', 'cno': 'SE0165980AU'}
+
+r = requests.post('http://www.starex.com.au/cgi-bin/GInfo.dll?EmmisTrack', data=payload)
+# r.encoding = 'gb2312'
+# s = r.content.decode(r.encoding)
+
+# print(s)
+
+parser = MyHTMLParser()
+parser.feed(r.text)
+
+# content = re.findall(r'<td', r.text)
+# print(r.text)
+
+# print(content)
